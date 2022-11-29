@@ -1,4 +1,6 @@
 
+#This file defines evertything connected to groups
+
 class _GroupElement:
     def __init__(self, value, addition, multiplication, subtraction, inversion):
         self.__value = value
