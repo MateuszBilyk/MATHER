@@ -30,7 +30,7 @@ class _GroupElement:
 class Group:
     __elements = []
 
-    def __init__(self, elements_values, addition, multiplication, inversion, subtraction, identity_value, zero_value):
+    def __init__(self, elements_values, addition, multiplication, subtraction, inversion, zero_value, identity_value):
         for e in elements_values:
             self.__elements.append(_GroupElement(e, addition, multiplication, subtraction, inversion))
         self.__addition = addition
@@ -46,5 +46,14 @@ class Group:
 
     def get_elements(self):
         return self.__elements
+
+
+class ModGroup(Group):
+
+    def __init__(self, p):
+        super().__init__(range(0, p), lambda a, b: (a+b) % p, lambda a, b: (a*b) % p, lambda a: -a, lambda a: 1/a, 1, 0)
+
+
+
 
 
