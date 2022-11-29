@@ -1,5 +1,7 @@
 
-#This file defines evertything connected to groups
+# This file defines everything connected to groups
+
+import algos
 
 class _GroupElement:
     def __init__(self, value, addition, multiplication, subtraction, inversion):
@@ -16,6 +18,9 @@ class _GroupElement:
     def __mul__(self, other):
         tmp_value = self.__multiplication(self.__value, other.get_value())
         return _GroupElement(tmp_value, self.__addition, self.__multiplication, self.__subtraction, self.__inversion)
+
+    def __it__(self, other):
+        return 1 if self.__value == other.get_value() else 0
 
     def inv(self):
         tmp = self.__inversion(self.__value)
@@ -53,9 +58,4 @@ class Group:
 class ModGroup(Group):
 
     def __init__(self, p):
-        super().__init__(range(0, p), lambda a, b: (a+b) % p, lambda a, b: (a*b) % p, lambda a: -a, lambda a: 1/a, 1, 0)
-
-
-
-
-
+        super().__init__(range(0, p), lambda a, b: (a+b) % p, lambda a, b: (a*b) % p, lambda a: (p-a) % p , lambda a: algos.mod_inv(a,p), 1, 0)
