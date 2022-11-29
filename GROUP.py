@@ -39,8 +39,8 @@ class Group:
         self.__subtraction = subtraction
         self.__multiplication = multiplication
         self.__inversion = inversion
-        self.__identity = _GroupElement(identity_value, addition, multiplication, inversion)
-        self.__zero = _GroupElement(zero_value, addition, multiplication, inversion)
+        self.__identity = _GroupElement(identity_value, addition, multiplication, subtraction, inversion)
+        self.__zero = _GroupElement(zero_value, addition, multiplication, subtraction, inversion)
 
     def print_elements(self):
         for i in self.__elements:
