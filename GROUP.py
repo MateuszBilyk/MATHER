@@ -1,17 +1,27 @@
 
 class _GroupElement:
-    def __init__(self, value, multiplication, inversion):
+    def __init__(self, value, addition, multiplication, subtraction, inversion):
         self.__value = value
+        self.__addition = addition
         self.__multiplication = multiplication
+        self.__subtraction = subtraction
         self.__inversion = inversion
+
+    def __add__(self, other):
+        tmp_value = self.__addition(self.__value, other.get_value())
+        return _GroupElement(tmp_value, self.__addition, self.__multiplication, self.__subtraction, self.__inversion)
 
     def __mul__(self, other):
         tmp_value = self.__multiplication(self.__value, other.get_value())
-        return _GroupElement(tmp_value, self.__multiplication, self.__inversion)
+        return _GroupElement(tmp_value, self.__addition, self.__multiplication, self.__subtraction, self.__inversion)
 
     def inv(self):
         tmp = self.__inversion(self.__value)
-        return _GroupElement(tmp, self.__multiplication, self.__inversion)
+        return _GroupElement(tmp, self.__addition, self.__multiplication, self.__subtraction, self.__inversion)
+
+    def neq(self):
+        tmp = self.__subtraction(self.__value)
+        return _GroupElement(tmp, self.__addition, self.__multiplication, self.__subtraction, self.__inversion)
 
     def get_value(self):
         return self.__value
@@ -20,14 +30,15 @@ class _GroupElement:
 class Group:
     __elements = []
 
-    def __init__(self, multiplication, inversion, identity_value):
+    def __init__(self, elements_values, addition, multiplication, inversion, subtraction, identity_value, zero_value):
+        for e in elements_values:
+            self.__elements.append(_GroupElement(e, addition, multiplication, subtraction, inversion))
+        self.__addition = addition
+        self.__subtraction = subtraction
         self.__multiplication = multiplication
         self.__inversion = inversion
-        self.__identity = _GroupElement(identity_value, multiplication, inversion)
-        self.__elements.append(self.__identity)
-
-    def new_element(self, value):
-        self.__elements.append(_GroupElement(value, self.__multiplication, self.__inversion))
+        self.__identity = _GroupElement(identity_value, addition, multiplication, inversion)
+        self.__zero = _GroupElement(zero_value, addition, multiplication, inversion)
 
     def print_elements(self):
         for i in self.__elements:
@@ -36,26 +47,4 @@ class Group:
     def get_elements(self):
         return self.__elements
 
-
-# EXAMPLES
-
-mod3group = Group(lambda a, b: (a*b) % 3, lambda a: a, 1)
-
-mod3group.print_elements()
-
-mod3group.new_element(2)
-
-mod3group.print_elements()
-
-tmp = mod3group.get_elements()
-
-mod3group.new_element((tmp[1]*tmp[0]).get_value())
-
-mod3group.print_elements()
-
-tmp = mod3group.get_elements()
-
-print((tmp[1]*tmp[2]).get_value())
-
-print(tmp[1].inv().get_value())
 
